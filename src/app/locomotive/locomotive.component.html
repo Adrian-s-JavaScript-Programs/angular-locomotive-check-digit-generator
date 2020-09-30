@@ -1,0 +1,32 @@
+<div>
+
+  <img src="assets/images/EA060.png">
+
+  <form [formGroup]="locomotiveForm" (ngSubmit)=processForm(locomotiveForm.value)>
+
+    <h3>Enter locomotive serial number:</h3>
+
+    <input type="text" id="serialNumber" formControlName="serialNumber" maxlength="11">
+
+    <div *ngIf="serialNumber.invalid && serialNumber.dirty" class="invalid-input">
+
+      <div *ngIf="serialNumber.errors?.required">
+        Input required.
+      </div>
+
+      <div *ngIf="serialNumber.errors?.pattern">
+        Input must be an 11 digits long decimal number.
+      </div>
+
+    </div>
+
+    <p>
+      <button type = "submit" [disabled] = "!locomotiveForm.valid">Generate</button>
+      <button type = "button" (click)="clearAll()">Clear All</button>
+    </p>
+
+  </form>
+
+  <div *ngIf = "result">{{result}} </div>
+
+</div>
