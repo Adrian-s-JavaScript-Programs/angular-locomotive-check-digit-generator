@@ -16,11 +16,13 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
+    fixture.destroy();
   });
 
   it(`should have as title 'locomotive-check-digit-app'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('locomotive-check-digit-app');
+    fixture.destroy();
   });
 });
