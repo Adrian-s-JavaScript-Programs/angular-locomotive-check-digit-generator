@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { LocomotiveComponent } from './locomotive.component';
 
@@ -10,8 +10,7 @@ describe('LocomotiveComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ LocomotiveComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [FormBuilder]
+      imports: [ ReactiveFormsModule ]
     })
     .compileComponents();
   });
@@ -38,7 +37,6 @@ describe('LocomotiveComponent', () => {
   });
 
   it('should create the component', () => {
-    component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 
@@ -73,21 +71,18 @@ describe('LocomotiveComponent', () => {
   });
 
   it('form should be valid for correct input', () => {
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue('91530478001');
     fixture.detectChanges();
     expect(component.locomotiveForm.valid).toBeTruthy(); 
   });
 
   it('form should not be valid for incorrect input', () => {
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue('9X');
     fixture.detectChanges();
     expect(component.locomotiveForm.valid).toBeFalsy(); 
   });
 
   it(`'Generate' button should be disabled when input is not valid`, () => {
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue('2020');
     fixture.detectChanges();
     const button = fixture.debugElement.query(
@@ -97,7 +92,6 @@ describe('LocomotiveComponent', () => {
   });
 
   it(`'Generate' button should be enabled when input is valid`, () => {
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue('91530478001');
     fixture.detectChanges();
     const button = fixture.debugElement.query(
@@ -109,7 +103,6 @@ describe('LocomotiveComponent', () => {
   it(`should generate 'pattern' validation error and render it`, () => {
 
     let testValue: string = '9X';
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue(testValue);
     fixture.detectChanges();
 
@@ -135,7 +128,6 @@ describe('LocomotiveComponent', () => {
   });
 
   it(`should generate 'required' validation error and render it`, () => {
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue('');
     fixture.detectChanges();
 
@@ -159,7 +151,6 @@ describe('LocomotiveComponent', () => {
   });
 
   it('should not generate validation errors when input is correct', () => {
-    component = fixture.componentInstance;
     component.locomotiveForm.controls['serialNumber'].setValue('91530478001');
     fixture.detectChanges();
     const numberInput = component.locomotiveForm.controls.serialNumber;
@@ -167,7 +158,6 @@ describe('LocomotiveComponent', () => {
   });
 
   it(`should call 'processForm' method when 'Generate' button is pressed in a valid form`, fakeAsync(() => {
-    component = fixture.componentInstance;
     /* we set a valid input value that would enable the submit button, so it could be clicked */
     component.locomotiveForm.controls['serialNumber'].setValue('91530478001');
     fixture.detectChanges();
@@ -184,7 +174,6 @@ describe('LocomotiveComponent', () => {
   }));
 
   it(`should not call 'processForm' method when 'Generate' button is pressed in an invalid form that makes it disabled`, fakeAsync(() => {
-    component = fixture.componentInstance;
     /* we set an invalid input value that would disable the submit button, so it could not be clicked */
     component.locomotiveForm.controls['serialNumber'].setValue('9X');
     fixture.detectChanges();
@@ -202,7 +191,6 @@ describe('LocomotiveComponent', () => {
   }));
 
   it(`should submit valid form on 'Generate' button click and render the correct result`, fakeAsync(() => {
-    component = fixture.componentInstance;
     const testValue : string = '91530478001';
     const checkDigit: number = 7;
     component.locomotiveForm.controls['serialNumber'].setValue(testValue);
@@ -230,7 +218,6 @@ describe('LocomotiveComponent', () => {
   }));
 
   it(`should call 'clearAll' method when 'Clear All' button is pressed`, fakeAsync(() => {
-    component = fixture.componentInstance;
     const testValue : string = '91530478001';
     component.locomotiveForm.controls['serialNumber'].setValue(testValue);
     fixture.detectChanges();
@@ -255,7 +242,6 @@ describe('LocomotiveComponent', () => {
   }));
 
   it(`method 'generateCheckDigit' should return correct results`, () => {
-    component = fixture.componentInstance;
     let testValue : string = '';
     let checkDigit : number = -1;
 
