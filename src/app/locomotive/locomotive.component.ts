@@ -27,9 +27,22 @@ export class LocomotiveComponent implements OnInit {
 
   }
 
-  /* This method receives valid data from the form and sets the processing result */
+  /* This method is used for back-end input validation */
+  validateInput(input: string) : boolean {
+
+    /* input string must contain exactly 11 digits */
+    let myRe = new RegExp("[0-9]{11}");
+    return myRe.test(input);
+
+  }
+
+  /* This method receives data from the form and sets the processing result */
   processForm(data) {
-    this.result = "The check digit for locomotive "+data.serialNumber+" is "+this.generateCheckDigit(data.serialNumber)+".";
+    
+    if(this.validateInput(data.serialNumber)==true)
+      this.result = "The check digit for locomotive "+data.serialNumber+" is "+this.generateCheckDigit(data.serialNumber)+".";
+    else
+      this.result = "Invalid input.";
   }
 
   /* This method clears the form and any other displayed messages */

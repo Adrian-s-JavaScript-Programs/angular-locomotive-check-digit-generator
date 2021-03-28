@@ -291,4 +291,40 @@ describe('LocomotiveComponent', () => {
 
   });
 
+  it('back-end validation should reject invalid input', fakeAsync(() => {
+
+    const testValue : string = 'abc';
+    const expectedResult : string = 'Invalid input.';
+
+    component.locomotiveForm.controls['serialNumber'].setValue(testValue);
+    fixture.detectChanges();
+
+    const button = fixture.debugElement.query(
+      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'Generate'
+    );
+    /* because input is invalid, submit button is disabled as a result of front-end validation */
+    expect(button.nativeElement.disabled).toBeTruthy();
+
+    /* we enable submit button, so we can click on it and submit the invalid form */
+    button.nativeElement.disabled = false;
+    fixture.detectChanges();
+    expect(button.nativeElement.disabled).toBeFalsy();
+
+    /*
+      By using 'and.callThrough()', the spy will also delegate calls to the actual implementations. 
+      We need 'processForm' method to execute and set 'result' component property.
+    */
+    spyOn(component, "processForm").and.callThrough();
+    button.nativeElement.click();
+    tick(); /* This function requires call within fakeAsync block */
+    expect(component.processForm).toHaveBeenCalled();
+    expect(component.result).toBeDefined();
+    expect(component.result).toEqual(expectedResult);
+
+    /* we trigger a change detection, because the processing result should be rendered */
+    fixture.detectChanges();
+    expect(fixture.debugElement.nativeElement.innerHTML).toContain(component.result);
+
+  }));
+
 });
