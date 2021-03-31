@@ -27,9 +27,29 @@ export class LocomotiveComponent implements OnInit {
 
   }
 
-  /* This method receives valid data from the form and sets the processing result */
+  /* Method used for input validation on business side */
+  validateInput(input: string) : boolean {
+
+    /*
+      Input must be an 11 digits long string.
+
+      Unlike Validators.pattern function, which automatically adds ^ and $ characters at the beginning 
+      and end of the string argument (if they do not already exist), we need to explicitly use those 
+      characters when creating a RegExp. Otherwise, the regular expression would accept strings that 
+      also contain other characters besides the 11 consecutive digits.
+    */
+    let myRe = new RegExp("^[0-9]{11}$");
+    return myRe.test(input);
+
+  }
+
+  /* This method receives data from the form and sets the processing result */
   processForm(data) {
-    this.result = "The check digit for locomotive "+data.serialNumber+" is "+this.generateCheckDigit(data.serialNumber)+".";
+
+    if(this.validateInput(data.serialNumber)==true)
+      this.result = "The check digit for locomotive "+data.serialNumber+" is "+this.generateCheckDigit(data.serialNumber)+".";
+    else
+      this.result = "You submitted an invalid input.";
   }
 
   /* This method clears the form and any other displayed messages */

@@ -291,4 +291,59 @@ describe('LocomotiveComponent', () => {
 
   });
 
+  it('business-side validation method should return correct results', () => {
+
+    expect(component.validateInput("12345678901")).toBeTrue();
+    expect(component.validateInput("")).toBeFalse();
+    expect(component.validateInput("abc")).toBeFalse();
+    expect(component.validateInput("123")).toBeFalse();
+    expect(component.validateInput("12345678901abc")).toBeFalse();
+    expect(component.validateInput("abc12345678901zyz")).toBeFalse();
+    expect(component.validateInput("abc1234567890zyz1")).toBeFalse();
+    expect(component.validateInput(".12345678901")).toBeFalse();
+    expect(component.validateInput("123456789A01")).toBeFalse();
+    expect(component.validateInput("*2345678901")).toBeFalse();
+    expect(component.validateInput("-12345678901-")).toBeFalse();
+    expect(component.validateInput("1234X678901")).toBeFalse();
+    expect(component.validateInput("12345678901333")).toBeFalse();
+
+  });
+
+  it('business-side validation should reject invalid input', fakeAsync(() => {
+
+    const testValue : string = 'abc';
+    const expectedResult : string = 'You submitted an invalid input.';
+
+    component.locomotiveForm.controls['serialNumber'].setValue(testValue);
+    fixture.detectChanges();
+
+    const button = fixture.debugElement.query(
+      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'Generate'
+    );
+    /* because input is invalid, submit button is disabled by user-side validation */
+    expect(button.nativeElement.disabled).toBeTrue();
+
+    /* we enable submit button, so we can click on it and submit the invalid form */
+    button.nativeElement.disabled = false;
+    fixture.detectChanges();
+    expect(button.nativeElement.disabled).toBeFalse();
+
+    /*
+      By using 'and.callThrough()', the spy will also delegate calls to the actual implementations.
+      We need 'processForm' method to execute and set 'result' component property.
+    */
+    spyOn(component, "processForm").and.callThrough();
+    button.nativeElement.click();
+
+    tick(); /* This function requires call within fakeAsync block */
+    expect(component.processForm).toHaveBeenCalled();
+    expect(component.result).toBeDefined();
+    expect(component.result).toEqual(expectedResult);
+
+    /* we trigger a change detection, because the processing result should be rendered */
+    fixture.detectChanges();
+    expect(fixture.debugElement.nativeElement.innerHTML).toContain(component.result);
+
+  }));
+
 });
