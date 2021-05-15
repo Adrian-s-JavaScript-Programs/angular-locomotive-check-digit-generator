@@ -6,8 +6,9 @@
 <a href="#section5">The reason for creating this application</a><br>
 <a href="#section6">Issues encountered during application development and decisions related to them</a><br>
 <a href="#section7">Issues encountered during unit tests writing and decisions related to them</a><br>
-<a href="#section8">For Railway fans</a><br>
-<a href="#section9">Conclusions</a><br>
+<a href="#section8">Issues encountered when deploying to GitHub Pages</a><br>
+<a href="#section9">For Railway fans</a><br>
+<a href="#section10">Conclusions</a><br>
 
 <a name="section1"></a>
 <h3>Introduction</h3>
@@ -73,6 +74,12 @@ Had the last digit of the sum been 0, the check digit would have been 0 (no subt
 <br>
 <a name="section4"></a>
 <h3>How to run the application</h3>
+You can run the application in two ways:
+<br>
+1) Online, at <a href = "https://adrian-s-javascript-programs.github.io/angular-locomotive-check-digit-generator/">this address</a>
+<br>
+2) On your local computer
+<br><br>
 If you want to run the application on your local computer, you need to have Node.js and Angular CLI installed.
 <br><br>
 You can get Node.js from <a href = "https://nodejs.org/">this address</a>.
@@ -349,6 +356,95 @@ In my unit tests, I worked with objects obtained using the testing framework and
 <br><br>
 In the end, I decided to leave my unit tests just the way they were, since they were already commited and since I don't think that my excessive testing would do any harm. At the same time, I don't think Jasmine would have come with an API that allows simulating user input in unit tests if that would have been an exclusive feature of end-to-end testing.
 <a name="section8"></a>
+<h3>Issues encountered when deploying to GitHub Pages</h3>
+Deployment to GitHub Pages was done in two steps:
+<br><br>
+1) Building for production
+<br><br>
+In my workspace, I ran this command:
+
+```
+ng build --prod --base-href "https://adrian-s-javascript-programs.github.io/angular-locomotive-check-digit-generator/"
+```
+
+That resulted in the creation of a folder named "dist" in the current project. Inside "dist" folder, there was another folder with the name of my project (locomotive-check-digit-app). This folder name will be given as parameter for the next command.
+<br><br>
+2) Deploying the project with the build from "dist" folder:
+
+```
+npx angular-cli-ghpages --dir=dist/locomotive-check-digit-app
+```
+
+Remark: I was using Angular 10. Some older versions of Angular do not create a subfolder (having project's name) inside "dist" folder and npx command needs to be adjusted accordingly.
+<br><br>
+After successfully running those two commands, I was able to run the application on GitHub Pages. To get its URL, I used GitHub’s web interface. On my repository page, I chose "Settings" tab, scrolled down to "GitHub Pages" section (meanwhile, GitHub site has been modified and has a "Pages" menu on the left) where the URL of my deployed application was mentioned.
+<br>
+URL is https<i></i>://adrian-s-javascript-programs.github.io/angular-locomotive-check-digit-generator/
+<br>
+It is actually the URL given when running build command.
+<br><br>
+<b>Important remarks:</b>
+<br><br>
+Deployment URL should <b>NOT</b> be confused with repository URL.
+<br>
+My repository URL is:
+https<i></i>://github.com/Adrian-s-JavaScript-Programs/angular-locomotive-check-digit-generator
+<br>
+Deployment URL is:
+https<i></i>://adrian-s-javascript-programs.github.io/angular-locomotive-check-digit-generator/
+<br><br>
+Also, ending slash for the URL is very important when running build command.
+<br><br>
+You cannot choose the URL where you deploy the application. It has to have a specific format.
+<br>
+In my case, it is https<i></i>://&lt;github_organisation_name&gt;.github.io/&lt;repository_name&gt;/
+<br><br>
+The reason why I created an organization is that at that time GitHub did not allow grouping my repositories (nor does in 2021), to keep them isolated from other people’s repositories that I might fork some other time. It is just a workaround for grouping all of my work in one single place (funny thing: because I am an organization owner, GitHub thinks I’m rich and offers me suggestions to fund other projects).
+<br><br>
+If you don’t use organizations, your deployment URL should be:
+<br>
+https<i></i>://&lt;github_user_name&gt;.github.io/&lt;repository_name&gt;/
+<br><br>
+<b>How deployment is done</b>
+<br><br>
+When you deploy, you automatically create a new branch, called "gh-pages". You can see it using GitHub’s web interface. On repository page, there is a "branches" tab. In my case, I have a "master" branch and a "gh-pages" branch.
+<br><br>
+These branches don’t interfere with each other, meaning you can safely modify your regular code without worrying you will affect "gh-pages" branch. When you run "ng build" command, a folder named "dist" is created on your computer. Since I generated my project using Angular CLI, a ".gitignore" file was also automatically generated back then. This file mentions "dist" folder on the exclude list and this means that if you want to push new code, "dist" folder will be ignored when pushing. Same happens when pulling from GitHub. Your work will be completely isolated from the deployment data, so you don’t have to worry about pushing or pulling files you do not want to.
+<br><br>
+Also, when cloning the project, "gh-pages" branch will be ignored and you will only get "master" branch.
+<br><br>
+If you want to un-deploy from GitHub, you simply delete "gh-pages" branch, using GitHub web interface (when you list your branches, you have "delete" icons that will allow you to remove branches). Branch will be removed from GitHub server. Nothing will be deleted from your local computer (you will still have "dist" folder locally). Deleting "gh-pages" branch will <b>not</b> affect your "master" branch, so your code will remain safe (both locally and on GitHub). Deleting "gh-pages" branch will not be recorded as new event on your GitHub contribution activity graphic. However, your initial deployment event will be removed from activity graphic after you un-deploy. 
+<br><br>
+If you deployed your application and later need to modify it, you’ll have to re-deploy it. Modifying master branch does <b>not</b> automatically bring changes to deployment branch. You can delete "gh-pages" branch and re-run build and deploy console commands. After you un-deploy, please wait at least half of minute before you re-deploy. Otherwise, application may not work after deployment (it takes a bit of time for changes to take effect, both when deploying or un-deploying).
+<br><br>
+If you have multiple projects and you want to deploy each one of them, GitHub allows that. When I was reading about how to deploy, I initially was misled into thinking that I can only have one deployed application for my GitHub account. That is <b>not</b> true. That limitation is about base URL. You are allowed to have one single site for username or organization - "http(s)<i></i>://&lt;username&gt;.github.io" or "http(s)<i></i>://&lt;organization&gt;.github.io". It is about domain without subdomain. But you can have unlimited project sites (whether owned by an organization or a user account), such as "http(s)<i></i>://&lt;username&gt;.github.io/&lt;repository&gt;" or "http(s)<i></i>://&lt;organization&gt;.github.io/&lt;repository&gt;" (notice the /&lt;repository&gt; part).
+<br><br>
+<b>Deployment Troubleshooting</b>
+<br><br>
+When learning how to deploy, I encountered some problems that I would like to share, to save other people’s time if they have similar issues. Most of those problems were caused by incorrect URL used with build command and searching for solutions often took me to false leads.
+<br><br>
+During my attempts to deploy, if online application did not work, I used to open the web console and see if there were any error messages there.
+<br><br>
+I used to get errors such as: "The resource from &lt;some_css_file&gt; was blocked due to MIME type ("text/plain") mismatch".
+<br><br>
+Trying to fix the problem, I got to a false lead where it said that I had to edit "tsconfig.json" file and use "target": "es5" instead of "target": "es2015". That change did <b>not</b> work (I was getting a new error: "Content Security Policy: The page’s settings blocked the loading of a resource"), so I undid the change.
+<br><br>
+The real cause of the problem was the incorrect URL that I used with build command. I was putting my repository URL and I wasn’t supposed to put that URL. Correct URL was actually this one:
+https<i></i>://&lt;github_organisation_name&gt;.github.io/&lt;repository_name&gt;/
+<br><br>
+Remark: If you don’t use organizations, your deployment URL should be:
+https<i></i>://&lt;github_user_name&gt;.github.io/&lt;repository_name&gt;/
+<br><br>
+Other cause of such errors: missing slash at the end of URL given for build command.
+<br><br>
+Remark: putting URL in quotes was not mandatory in my case (I was able to successfully deploy after running build command with or without putting URL in quotes).
+<br><br>
+Another problem I encountered was with a console message ("index.html could not be copied to 404.html. This does not look like an angular-cli project?!") when running "npx" command. This was an unpleasant problem, because it was discrete and wasn’t stopping "npx" command execution. In fact, "npx" command was reporting "Successfully published via angular-cli-ghpages! Have a nice day!" at the end. Except that my application was not working on GitHub Pages.
+<br><br>
+The problem was caused because I was using a single hyphen instead of two, when specifying "dist" folder (--dir=dist/locomotive-check-digit-app). That happened because I copy-pasted that part of command from an online tutorial where those two hyphens were converted to one single long dash. When I pasted the text to my console, the dash was converted to one single hyphen. It took me some time to figure out what the problem was.
+<br><br>
+Finally, I encountered one last problem. Everything seemed to be correct, but I was getting "Page Not Found" message when opening the deployed application, with a web console error complaining about a blocked resource (some icon file). The problem occurred because after making changes to my code, I was impatient and I did not wait long enough between un-deploying the old application and re-deploying the application with the updated code. To fix the issue, I repeated the operations, but this time I waited a bit longer after un-deploying. After I deployed again, it worked.
+<a name="section9"></a>
 <h3>For Railway fans</h3>
 The locomotive whose picture is displayed in the application is an Electroputere LE5100 (also known as EA060), operated by Romanian state owned rail freight company CFR Marfa. The other locomotive (which appears only in this document) is a Softronic Transmontana locomotive, operated by Green Cargo Swedish rail freight operator.
 <br><br>
@@ -359,7 +455,7 @@ Currently, Electroputere company no longer exists, but another company (<a href 
 Softronic incorporates former Electroputere specialists, as employees and owners. They started by modernizing Electroputere locomotives and based on them, they created new Phoenix (series 471/473/478 of class 47) and Transmontana (class 48) locomotives. Starting with 2017, they began selling Transmontana locomotives to Green Cargo Swedish company, so the descendent of a locomotive originated in Sweden is back to its ancestor's motherland. 
 <br><br>
 In 2017 and 2018, Green Cargo bought a total number of 16 Transmontana locomotives, and in the fall of 2020 they announced they were interested in buying 100 (one hundred) more Transmontana locomotives by year 2030.
-<a name="section9"></a>
+<a name="section10"></a>
 <h3>Conclusions</h3>
 This document explains what this application does, how to run it, why I created it and how it technically works. Although not intended to be a tutorial, present document also contains information that might save a lot of time for people who are learning Angular.
 <br><br>
